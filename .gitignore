@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+xtcli.toml
+*.egg-info/
+dist/
+.pytest_cache/
+work/
+# xTranslator distribution (download from Nexus, do not commit)
+xTranslator-*/
