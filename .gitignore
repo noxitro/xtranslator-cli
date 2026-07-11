@@ -6,5 +6,7 @@ xtcli.toml
 dist/
 .pytest_cache/
 work/
+scratch_*
 # xTranslator distribution (download from Nexus, do not commit)
 xTranslator-*/
+_xTranslator/

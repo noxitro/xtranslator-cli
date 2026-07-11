@@ -17,8 +17,14 @@ from .wire import QUERY_PREF
 
 BAK_SUFFIX = ".xtcli-bak"
 
-MR_YES = 6  # Delphi mrYes; pre-answers the finalize confirmation (askPrefsArray[0])
+MR_YES = 6  # Delphi mrYes
 ASK_PREFS_SLOTS = 16  # tPrefsArray = array [0..15] (TESVT_Const.pas)
+# ArgsPref holds the remembered answer for each "don't ask again" dialog. Every
+# confirmation the batch can hit (finalize warning, overwrite confirmations for
+# esp/strings/mcm/pex, forced-codepage warning) passes bAlwaysYes, so a non-zero
+# slot makes askDialog return Yes without prompting. Pre-answering all slots
+# keeps the run unattended.
+AUTO_YES_SLOTS = tuple(range(ASK_PREFS_SLOTS))
 
 
 def _split_lines(data: bytes) -> tuple[bytes, list[bytes], bytes]:
@@ -115,18 +121,25 @@ def apply_setup(cfg) -> list[str]:
                 slots[i] = int(tok)
             except ValueError:
                 pass
-    slots[0] = MR_YES
+    for slot in AUTO_YES_SLOTS:
+        slots[slot] = MR_YES
     set_values(cfg.common_prefs, {
         "UILang": "English",
         "ArgsPref": ",".join(str(s) for s in slots),
     })
     done.append(f"patched {cfg.common_prefs}")
+
+    # 4. game prefs.ini: suppress the first-launch language dialog (the batch
+    #    rules set the language pair per file, so the global default is unused).
+    backup_once(cfg.game_prefs_ini)
+    set_values(cfg.game_prefs_ini, {"isFirstLaunch2": "0"})
+    done.append(f"patched {cfg.game_prefs_ini}")
     return done
 
 
 def restore_all(cfg) -> list[str]:
     done = []
-    for path in (cfg.api_prefs, cfg.api_translator_txt, cfg.common_prefs):
+    for path in (cfg.api_prefs, cfg.api_translator_txt, cfg.common_prefs, cfg.game_prefs_ini):
         bak = path.with_name(path.name + BAK_SUFFIX)
         if bak.is_file():
             shutil.copy2(bak, path)

@@ -34,12 +34,13 @@ PLUGIN_EXTS = {".esp", ".esm", ".esl"}
 # --------------------------------------------------------------------------- helpers
 
 def _ensure_setup(cfg: Config) -> None:
-    """Re-assert the prefs overrides (idempotent, cheap) before every run."""
+    """Re-assert the prefs overrides before every run.
+
+    xTranslator rewrites its pref files on exit keeping only the keys it knows,
+    so the overrides are re-applied (idempotently, backups are made only once).
+    """
     cfg.validate()
-    if prefs.get_value(cfg.api_prefs, "OpenAI_Url") != cfg.api_url \
-            or prefs.get_value(cfg.api_translator_txt, "OpenAI_ArrayLimit") != "1":
-        for line in prefs.apply_setup(cfg):
-            print(line)
+    prefs.apply_setup(cfg)
 
 
 def _abs_files(names: list[str]) -> list[Path]:
@@ -132,36 +133,59 @@ def cmd_extract(args) -> int:
 
 
 def _stage_inputs(files: list[Path], staging: Path) -> dict[Path, Path]:
-    """Copy inputs (plus Strings sidecar folders for plugins) into staging."""
+    """Map each input to the path xTranslator should load.
+
+    Plugins and MCM files are processed in place: finalize only writes into an
+    `xtcli_out` subfolder next to them, and localized plugins need their
+    .strings/BSA neighbours, which cannot be copied along. Only .pex files are
+    staged, because FinalizePex overwrites the loaded file itself.
+    """
     mapping = {}
     for i, f in enumerate(files):
-        sub = staging / f"in{i}"
-        sub.mkdir(parents=True)
-        staged = sub / f.name
-        shutil.copy2(f, staged)
-        if f.suffix.lower() in PLUGIN_EXTS:
-            sidecar = f.parent / "Strings"
-            if sidecar.is_dir():
-                shutil.copytree(sidecar, sub / "Strings")
-        mapping[f] = staged
+        if f.suffix.lower() == ".pex":
+            sub = staging / f"in{i}"
+            sub.mkdir(parents=True)
+            staged = sub / f.name
+            shutil.copy2(f, staged)
+            mapping[f] = staged
+        else:
+            mapping[f] = f
     return mapping
 
 
+# finalize writes into an `xtcli_out` folder under the working file's folder,
+# which xTranslator resolves per file type: the file's own folder for embedded
+# esp/esm, or a strings/ (localized), scripts/ (pex) or interface/translations/
+# (mcm) subfolder next to it.
+_EXPORT_SUBDIRS = ("", "strings", "scripts", "interface/translations")
+
+
+def _export_dirs(mapping: dict[Path, Path]) -> set[Path]:
+    dirs = set()
+    for loaded in mapping.values():
+        base = loaded.parent
+        for sub in _EXPORT_SUBDIRS:
+            dirs.add((base / sub / batchgen.EXPORT_SUBFOLDER) if sub else base / batchgen.EXPORT_SUBFOLDER)
+    return dirs
+
+
 def _harvest_outputs(mapping: dict[Path, Path], outdir: Path) -> list[Path]:
-    """Collect finalized files: xtcli_out subfolders + staged copies changed in place."""
+    """Collect finalized files and clean up the xtcli_out folders."""
     outdir.mkdir(parents=True, exist_ok=True)
     results = []
+    for exported in _export_dirs(mapping):
+        if not exported.is_dir():
+            continue
+        for p in exported.rglob("*"):
+            if p.is_file():
+                target = outdir / p.relative_to(exported)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(p, target)
+                results.append(target)
+        shutil.rmtree(exported, ignore_errors=True)
+    # pex finalize overwrites the loaded (staged) file instead of exporting
     for orig, staged in mapping.items():
-        exported = staged.parent / batchgen.EXPORT_SUBFOLDER
-        if exported.is_dir():
-            for p in exported.rglob("*"):
-                if p.is_file():
-                    target = outdir / p.relative_to(exported)
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(p, target)
-                    results.append(target)
-        # pex finalize writes next to the loaded file instead of the export folder
-        if staged.is_file() and staged.read_bytes() != orig.read_bytes():
+        if staged != orig and staged.is_file() and staged.read_bytes() != orig.read_bytes():
             target = outdir / staged.name
             shutil.copy2(staged, target)
             results.append(target)

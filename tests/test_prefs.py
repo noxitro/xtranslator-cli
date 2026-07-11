@@ -39,8 +39,11 @@ def test_apply_setup_and_restore(tmp_path):
     assert prefs.get_value(cfg.api_prefs, "OpenAI_Key") == "xtcli-local"
     assert prefs.get_value(cfg.api_prefs, "OpenAI_Url") == cfg.api_url
     assert prefs.get_value(cfg.common_prefs, "UILang") == "English"
-    # slot 0 forced to mrYes(6), user's remembered slot 1 kept
-    assert prefs.get_value(cfg.common_prefs, "ArgsPref").split(",")[:2] == ["6", "3"]
+    # every remembered-dialog slot pre-answered Yes(6); 16 slots total
+    argspref = prefs.get_value(cfg.common_prefs, "ArgsPref").split(",")
+    assert argspref == ["6"] * prefs.ASK_PREFS_SLOTS
+    # first-launch language dialog suppressed in the game prefs
+    assert prefs.get_value(cfg.game_prefs_ini, "isFirstLaunch2") == "0"
 
     prefs.restore_all(cfg)
     assert prefs.get_value(cfg.api_translator_txt, "OpenAI_ArrayLimit") == "49"

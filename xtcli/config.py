@@ -54,6 +54,10 @@ class Config:
         return self.game_prefs_dir / "batchprocessor" / "~processor.tmp"
 
     @property
+    def game_prefs_ini(self) -> Path:
+        return self.game_prefs_dir / "prefs.ini"
+
+    @property
     def common_prefs(self) -> Path:
         return self.install_dir / "UserPrefs" / "commonPrefs.ini"
 

@@ -106,12 +106,22 @@ class _Handler(BaseHTTPRequestHandler):
         })
 
 
+class _QuietServer(ThreadingHTTPServer):
+    def handle_error(self, request, client_address):
+        # xTranslator resets kept-alive connections on shutdown - not an error
+        import sys
+        exc = sys.exception()
+        if isinstance(exc, (ConnectionResetError, ConnectionAbortedError, BrokenPipeError)):
+            return
+        super().handle_error(request, client_address)
+
+
 class FakeApiServer:
     """Threaded local server; use as a context manager."""
 
     def __init__(self, port: int, mode: str, table: dict[str, str] | None = None):
         self.state = ServerState(mode, table)
-        self._httpd = ThreadingHTTPServer(("127.0.0.1", port), _Handler)
+        self._httpd = _QuietServer(("127.0.0.1", port), _Handler)
         self._httpd.state = self.state  # type: ignore[attr-defined]
         self._thread = threading.Thread(target=self._httpd.serve_forever, daemon=True)
 
