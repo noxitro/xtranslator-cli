@@ -134,7 +134,7 @@ pip install -e ".[test]"
 python -m pytest tests/
 ```
 
-CI（GitHub Actions, `windows-latest` / Python 3.11・3.13）で push と PR ごとに同じテストを実行します。テストはユニットテストのみで、xTranslator 本体を起動する E2E は含みません（本体は再配布できないため、手元で確認します）。
+CI（GitHub Actions, `windows-latest` / Python 3.11・3.13）で push と PR ごとに同じテストを実行します。テストはユニットテストのみで、xTranslator 本体を起動する E2E は含みません（本体の配布元は Nexus のみ（要ログイン）で CI から自動取得できないため、手元で確認します）。
 
 ソース調査メモ: プロトコルの根拠はすべて xTranslator のソース（MPL-2.0, https://github.com/MGuffin/xTranslator ）で確認済み。主な参照箇所は `TESVT_main.pas` の `runCommands`（バッチコマンド）、`TESVT_TranslatorApi.pas` の `TOpenAITranslator.Translate`（API ワイヤ形式）、`TESVT_commandProcessor.pas`（`~processor.tmp` の自動ロード）。
 
