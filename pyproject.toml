@@ -13,6 +13,9 @@ dependencies = [
     "pywinauto>=0.6.8",
 ]
 
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
 [project.scripts]
 xtcli = "xtcli.cli:main"
 
