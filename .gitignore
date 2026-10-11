@@ -5,8 +5,16 @@ xtcli.toml
 *.egg-info/
 dist/
 .pytest_cache/
+.espmeta-cache/
 work/
 scratch_*
 # xTranslator distribution (download from Nexus, do not commit)
 xTranslator-*/
 _xTranslator/
+# local test outputs / game plugins (never commit third-party mod files)
+regen-out-*/
+*.esp
+*.esm
+*.esl
+*.pex
+*.sst

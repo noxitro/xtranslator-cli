@@ -1,11 +1,13 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "xtcli"
 version = "0.1.0"
 description = "Headless CLI wrapper for xTranslator (Bethesda mod translation tool)"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
 dependencies = [
     "pywinauto>=0.6.8",
@@ -16,3 +18,6 @@ xtcli = "xtcli.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["xtcli*"]
+
+[tool.setuptools.package-data]
+xtcli = ["data/*.json"]

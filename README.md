@@ -2,6 +2,8 @@
 
 [xTranslator](https://www.nexusmods.com/skyrimspecialedition/mods/134)（Skyrim / Fallout / Starfield MOD 翻訳ツール）を CLI から自動実行するためのラッパーです。エージェント（LLM）による翻訳ワークフローを想定しています。
 
+> **非公式ツールです。** xTranslator 作者（McGuffin）とは無関係で、xTranslator 本体は同梱していません。
+
 esp / esm / esl / pex / MCM 翻訳テキストのすべてを **xTranslator 本体のコード**で読み書きするため、ファイル形式の互換性は GUI 操作と完全に同一です。
 
 ## 仕組み
@@ -72,8 +74,10 @@ python -m xtcli apply MyMod.esp -t strings.json -o out\ --missing-out missing.js
   "files": ["...\\MyMod.esp"],
   "instructions": "Fill in every empty 'trans' with the translation of 'orig'. Keep placeholder tokens exactly as they are ...",
   "strings": [
-    { "orig": "Iron Sword", "trans": "" },
-    { "orig": "Emits light for <a_A> seconds.", "trans": "" }
+    { "orig": "Iron Sword", "trans": "", "kind": "name" },
+    { "orig": "Emits light for <a_A> seconds.", "trans": "" },
+    { "orig": "Hello, my love. Back from some adventure I bet.", "trans": "",
+      "kind": "npc_line", "speaker": "female", "edid": "WenchHelloTopic" }
   ]
 }
 ```
@@ -82,6 +86,18 @@ python -m xtcli apply MyMod.esp -t strings.json -o out\ --missing-out missing.js
 - 空の `trans` をすべて埋める。`orig` はそのまま残す。
 - `<a_A>`（エイリアス）、`999`（数値）、`<Alias=...>`、`%s` 系の書式、`<L_F>`（改行）、その他 `<...>` タグは**原文どおり保持**する（finalize 時に実際のゲーム変数へ復元される）。
 - `orig` の改行の数を変えない。
+- `kind` / `speaker` / `edid` は読み取り専用の文脈情報（下記参照）。**編集も削除もしない**こと。口調（話者の性別・立場に合う言い回し）の選択に使う。
+
+### 台詞メタデータ（kind / speaker / edid）
+
+`extract` はプラグイン（esp/esm/esl）を直接パースし（`xtcli/espmeta.py`）、各文字列に文脈フィールドを付与します。xTranslator の API ワイヤには生テキストしか流れないため、この情報はプラグインのレコードから独自に取得しています。
+
+- `kind` — 文字列の種別: `npc_line`（**NPC が喋る**台詞 = INFO:NAM1）/ `player_line`（プレイヤーが喋る台詞・会話選択肢 = DIAL:FULL, INFO:RNAM）/ `book` / `name` / `system` / `other`
+- `speaker` — `npc_line` のみ。話者の性別: `female` / `male` / `mixed`（男女どちらも話し得る）/ `unknown`（判定材料なし）
+  - 判定材料: CTDA 条件 `GetIsSex`・`GetIsVoiceType`（VTYP の Female フラグ、FLST は展開）・`GetIsID`、INFO の `ANAM`（話者 NPC の ACBS Female フラグ）。エイリアス・派閥ベースの条件しか無い台詞は `unknown` になるため、MOD 側の知識（そのMODの話者が誰か）で補完すること。
+- `edid` — 出所レコードの EditorID（トピック名など。文脈のヒント）
+
+バニラマスター（Skyrim.esm 等）の音声タイプ解決には、xTranslator の prefs にあるゲーム Data フォルダを参照し、初回スキャン結果を `.espmeta-cache/` にキャッシュします（Data フォルダが見つからない場合は同梱の `xtcli/data/vanilla_voicetypes.json` にフォールバック）。ローカライズ済みプラグインと pex 由来の文字列にはメタデータは付きません。フィールドは追加のみの後方互換で、`apply` は `orig`/`trans` 以外を参照しません。
 
 ### その他
 
@@ -109,7 +125,7 @@ python -m xtcli apply MyMod.esp -t strings.json -o out\ --missing-out missing.js
 - `extract` の原文に現れる `<a_A>` はエイリアス、`999` は数値のプレースホルダ（xTranslator が正規化したもの）。翻訳時はそのまま残せば、finalize 時に実際のゲーム変数へ復元されます。
 - PEX の finalize はロードしたファイル自体を上書きするため、xtcli はステージングにコピーして処理し結果を回収します。
 - 長文（3500 文字超の複数行文字列）は生の改行で送受信されます。仕組み上の対応済みです。
-- 完了はセンチネル文字列の受信で検知します。万一検知できない場合は `idle_timeout` 秒（既定 120、`xtcli.toml`）の無通信でフォールバック終了します。大量ファイルで途中終了する場合は延長してください。
+- 完了はセンチネル文字列の受信で検知します。万一検知できない場合は `idle_timeout` 秒（既定 300、`xtcli.toml`）の無通信でフォールバック終了します。大量ファイルで途中終了する場合は延長してください。
 
 ## 開発
 
@@ -118,3 +134,7 @@ python -m pytest tests/
 ```
 
 ソース調査メモ: プロトコルの根拠はすべて xTranslator のソース（MPL-2.0, https://github.com/MGuffin/xTranslator ）で確認済み。主な参照箇所は `TESVT_main.pas` の `runCommands`（バッチコマンド）、`TESVT_TranslatorApi.pas` の `TOpenAITranslator.Translate`（API ワイヤ形式）、`TESVT_commandProcessor.pas`（`~processor.tmp` の自動ロード）。
+
+## ライセンス
+
+[MIT License](LICENSE)。xTranslator 本体（MPL-2.0）のコードは含みません。
