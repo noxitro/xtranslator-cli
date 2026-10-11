@@ -1,0 +1,848 @@
+{
+ "skyrim.esm": {
+  "vtyp": {
+   "1111671": false,
+   "1092191": false,
+   "1078463": false,
+   "1002636": false,
+   "959079": false,
+   "959078": false,
+   "923342": true,
+   "920730": false,
+   "920729": false,
+   "886740": false,
+   "882861": false,
+   "785195": false,
+   "698579": false,
+   "651643": true,
+   "623695": false,
+   "623675": false,
+   "623674": false,
+   "593139": false,
+   "546029": false,
+   "546028": true,
+   "291990": false,
+   "256166": false,
+   "937987": false,
+   "937986": false,
+   "929736": false,
+   "688228": false,
+   "477029": false,
+   "477028": false,
+   "296838": false,
+   "176089": false,
+   "623163": true,
+   "623162": false,
+   "623161": false,
+   "608208": false,
+   "555387": true,
+   "455761": false,
+   "455760": false,
+   "455759": false,
+   "320768": true,
+   "243106": true,
+   "167308": true,
+   "148011": true,
+   "270267": false,
+   "270266": false,
+   "266747": false,
+   "167076": false,
+   "202900": true,
+   "170374": false,
+   "128679": false,
+   "128677": false,
+   "128163": false,
+   "127718": false,
+   "127625": false,
+   "127624": false,
+   "127623": false,
+   "127542": false,
+   "127538": false,
+   "127533": false,
+   "127532": false,
+   "127530": false,
+   "127525": false,
+   "127517": false,
+   "127445": false,
+   "127444": false,
+   "127443": false,
+   "127442": false,
+   "127441": false,
+   "127440": false,
+   "127439": false,
+   "127438": false,
+   "127437": false,
+   "127360": false,
+   "127327": false,
+   "127314": false,
+   "127310": false,
+   "245156": false,
+   "244778": false,
+   "234063": false,
+   "234062": true,
+   "219159": false,
+   "194500": false,
+   "194499": false,
+   "194498": false,
+   "194497": false,
+   "117252": false,
+   "113503": false,
+   "106469": false,
+   "102924": false,
+   "171432": false,
+   "170283": false,
+   "154613": false,
+   "134170": false,
+   "119992": false,
+   "115628": false,
+   "115266": false,
+   "114102": true,
+   "114101": true,
+   "114095": false,
+   "111968": true,
+   "111967": false,
+   "110720": true,
+   "110718": false,
+   "110715": false,
+   "108091": true,
+   "108090": false,
+   "82994": true,
+   "80835": true,
+   "80627": true,
+   "80626": false,
+   "80625": true,
+   "80624": false,
+   "80623": true,
+   "80622": false,
+   "80621": true,
+   "80620": false,
+   "80619": true,
+   "80618": false,
+   "80617": true,
+   "80616": false,
+   "80615": true,
+   "80614": false,
+   "80613": true,
+   "80612": true,
+   "80611": true,
+   "80610": true,
+   "80609": true,
+   "80608": true,
+   "80606": true,
+   "80605": true,
+   "80604": true,
+   "80603": false,
+   "80602": false,
+   "80601": false,
+   "80600": false,
+   "80599": false,
+   "80598": false,
+   "80597": false,
+   "80596": false,
+   "80595": false,
+   "80594": false,
+   "80593": false,
+   "46": true,
+   "45": false
+  },
+  "flst": {
+   "95028": [
+    "female",
+    "male"
+   ],
+   "1113074": [
+    "female",
+    "male"
+   ],
+   "1102495": [
+    "female",
+    "male"
+   ],
+   "1102494": [
+    "female",
+    "male"
+   ],
+   "1102493": [
+    "female",
+    "male"
+   ],
+   "1088626": [
+    "female",
+    "male"
+   ],
+   "1054385": [
+    "male"
+   ],
+   "1039272": [
+    "male"
+   ],
+   "1004416": [
+    "female",
+    "male"
+   ],
+   "989873": [
+    "male"
+   ],
+   "959944": [
+    "male"
+   ],
+   "923345": [
+    "female",
+    "male"
+   ],
+   "916270": [
+    "female",
+    "male"
+   ],
+   "909641": [
+    "male"
+   ],
+   "889730": [
+    "male"
+   ],
+   "889720": [
+    "female",
+    "male"
+   ],
+   "888350": [
+    "female",
+    "male"
+   ],
+   "886530": [
+    "male"
+   ],
+   "885523": [
+    "female",
+    "male"
+   ],
+   "882749": [
+    "female",
+    "male"
+   ],
+   "878898": [
+    "male"
+   ],
+   "861102": [
+    "female",
+    "male"
+   ],
+   "861100": [
+    "female",
+    "male"
+   ],
+   "853351": [
+    "female",
+    "male"
+   ],
+   "839248": [
+    "female",
+    "male"
+   ],
+   "839247": [
+    "female",
+    "male"
+   ],
+   "839246": [
+    "female",
+    "male"
+   ],
+   "839245": [
+    "female",
+    "male"
+   ],
+   "839231": [
+    "female",
+    "male"
+   ],
+   "839032": [
+    "female",
+    "male"
+   ],
+   "817383": [
+    "female",
+    "male"
+   ],
+   "785229": [
+    "female",
+    "male"
+   ],
+   "769192": [
+    "female",
+    "male"
+   ],
+   "733844": [
+    "female",
+    "male"
+   ],
+   "715910": [
+    "female",
+    "male"
+   ],
+   "715782": [
+    "male"
+   ],
+   "710575": [
+    "female",
+    "male"
+   ],
+   "690870": [
+    "female",
+    "male"
+   ],
+   "690852": [
+    "female",
+    "male"
+   ],
+   "690847": [
+    "female",
+    "male"
+   ],
+   "637739": [
+    "female",
+    "male"
+   ],
+   "637738": [
+    "female",
+    "male"
+   ],
+   "637737": [
+    "female",
+    "male"
+   ],
+   "418092": [
+    "female",
+    "male"
+   ],
+   "867430": [
+    "female"
+   ],
+   "857198": [
+    "male"
+   ],
+   "830395": [
+    "male"
+   ],
+   "794943": [
+    "female",
+    "male"
+   ],
+   "794942": [
+    "female",
+    "male"
+   ],
+   "794941": [
+    "female",
+    "male"
+   ],
+   "101431": [
+    "male"
+   ],
+   "469498": [
+    "male"
+   ],
+   "378960": [
+    "male"
+   ],
+   "336427": [
+    "female",
+    "male"
+   ],
+   "277295": [
+    "female",
+    "male"
+   ],
+   "781556": [
+    "female",
+    "male"
+   ],
+   "763199": [
+    "female",
+    "male"
+   ],
+   "736849": [
+    "male"
+   ],
+   "736846": [
+    "female",
+    "male"
+   ],
+   "712713": [
+    "female",
+    "male"
+   ],
+   "701433": [
+    "female",
+    "male"
+   ],
+   "700305": [
+    "female",
+    "male"
+   ],
+   "695074": [
+    "female",
+    "male"
+   ],
+   "689777": [
+    "female",
+    "male"
+   ],
+   "689774": [
+    "female",
+    "male"
+   ],
+   "689771": [
+    "female",
+    "male"
+   ],
+   "689767": [
+    "female",
+    "male"
+   ],
+   "689763": [
+    "female",
+    "male"
+   ],
+   "689760": [
+    "female",
+    "male"
+   ],
+   "689755": [
+    "female",
+    "male"
+   ],
+   "689754": [
+    "female",
+    "male"
+   ],
+   "676958": [
+    "female",
+    "male"
+   ],
+   "676957": [
+    "female",
+    "male"
+   ],
+   "676956": [
+    "female",
+    "male"
+   ],
+   "676955": [
+    "female",
+    "male"
+   ],
+   "676954": [
+    "female",
+    "male"
+   ],
+   "653340": [
+    "female",
+    "male"
+   ],
+   "595945": [
+    "female",
+    "male"
+   ],
+   "521201": [
+    "male"
+   ],
+   "554971": [
+    "male"
+   ],
+   "502285": [
+    "female",
+    "male"
+   ],
+   "499698": [
+    "female",
+    "male"
+   ],
+   "487614": [
+    "male"
+   ],
+   "487613": [
+    "female",
+    "male"
+   ],
+   "487612": [
+    "male"
+   ],
+   "487609": [
+    "male"
+   ],
+   "477831": [
+    "male"
+   ],
+   "477829": [
+    "male"
+   ],
+   "474300": [
+    "female",
+    "male"
+   ],
+   "459660": [
+    "female",
+    "male"
+   ],
+   "446562": [
+    "female",
+    "male"
+   ],
+   "430768": [
+    "male"
+   ],
+   "428746": [
+    "female",
+    "male"
+   ],
+   "365165": [
+    "female",
+    "male"
+   ],
+   "262327": [
+    "female",
+    "male"
+   ],
+   "262326": [
+    "female",
+    "male"
+   ],
+   "261998": [
+    "female",
+    "male"
+   ],
+   "261995": [
+    "female",
+    "male"
+   ],
+   "135078": [
+    "female",
+    "male"
+   ],
+   "482606": [
+    "female",
+    "male"
+   ],
+   "455762": [
+    "female",
+    "male"
+   ],
+   "452654": [
+    "female",
+    "male"
+   ],
+   "452653": [
+    "female",
+    "male"
+   ],
+   "373179": [
+    "male"
+   ],
+   "333731": [
+    "male"
+   ],
+   "326627": [
+    "female",
+    "male"
+   ],
+   "307934": [
+    "female",
+    "male"
+   ],
+   "195044": [
+    "female",
+    "male"
+   ],
+   "145993": [
+    "female",
+    "male"
+   ],
+   "293376": [
+    "female",
+    "male"
+   ],
+   "219686": [
+    "female",
+    "male"
+   ],
+   "115652": [
+    "female",
+    "male"
+   ],
+   "244116": [
+    "female",
+    "male"
+   ],
+   "244109": [
+    "female",
+    "male"
+   ],
+   "244106": [
+    "female",
+    "male"
+   ],
+   "242914": [
+    "female",
+    "male"
+   ],
+   "242853": [
+    "female",
+    "male"
+   ],
+   "237957": [
+    "female",
+    "male"
+   ],
+   "237511": [
+    "female",
+    "male"
+   ],
+   "235408": [
+    "female",
+    "male"
+   ],
+   "231286": [
+    "female",
+    "male"
+   ],
+   "231285": [
+    "female",
+    "male"
+   ],
+   "225298": [
+    "female",
+    "male"
+   ],
+   "221256": [
+    "female",
+    "male"
+   ],
+   "221255": [
+    "female",
+    "male"
+   ],
+   "221254": [
+    "female",
+    "male"
+   ],
+   "221253": [
+    "female",
+    "male"
+   ],
+   "221252": [
+    "female",
+    "male"
+   ],
+   "221251": [
+    "female",
+    "male"
+   ],
+   "221250": [
+    "female",
+    "male"
+   ],
+   "221249": [
+    "female",
+    "male"
+   ],
+   "221248": [
+    "female",
+    "male"
+   ],
+   "171280": [
+    "female",
+    "male"
+   ]
+  }
+ },
+ "update.esm": {
+  "vtyp": {},
+  "flst": {}
+ },
+ "dawnguard.esm": {
+  "vtyp": {
+   "72918": false,
+   "71303": false,
+   "71297": false,
+   "98755": false,
+   "95992": true,
+   "95991": false,
+   "92189": false,
+   "91773": false,
+   "85954": false,
+   "81930": false,
+   "63662": false,
+   "41661": true,
+   "37888": false,
+   "32134": false,
+   "31816": true,
+   "31815": false,
+   "31814": false,
+   "31813": false,
+   "31812": false,
+   "31282": true,
+   "11119": true
+  },
+  "flst": {
+   "26502": [
+    "female",
+    "male"
+   ],
+   "242853": [
+    "female",
+    "male"
+   ],
+   "90870": [
+    "female",
+    "male"
+   ],
+   "85933": [
+    "female",
+    "male"
+   ],
+   "71667": [
+    "male"
+   ],
+   "53257": [
+    "female"
+   ],
+   "26469": [
+    "female"
+   ],
+   "24151": [
+    "female",
+    "male"
+   ],
+   "13559": [
+    "female"
+   ],
+   "13555": [
+    "male"
+   ],
+   "13545": [
+    "male"
+   ],
+   "11121": [
+    "female"
+   ]
+  }
+ },
+ "hearthfires.esm": {
+  "vtyp": {},
+  "flst": {
+   "98270": [
+    "female"
+   ],
+   "24151": [
+    "female",
+    "male"
+   ],
+   "19854": [
+    "male"
+   ],
+   "19853": [
+    "female",
+    "male"
+   ],
+   "19852": [
+    "female",
+    "male"
+   ],
+   "19851": [
+    "female",
+    "male"
+   ],
+   "19850": [
+    "female",
+    "male"
+   ],
+   "712713": [
+    "female",
+    "male"
+   ],
+   "17063": [
+    "female",
+    "male"
+   ]
+  }
+ },
+ "dragonborn.esm": {
+  "vtyp": {
+   "251006": false,
+   "238752": false,
+   "204216": false,
+   "164417": false,
+   "150590": false,
+   "150577": false,
+   "149477": true,
+   "149476": false,
+   "147446": false,
+   "133340": false,
+   "132967": false,
+   "127355": false,
+   "99435": false,
+   "99434": false,
+   "99433": false,
+   "98176": true,
+   "98175": false,
+   "98174": false,
+   "96123": false
+  },
+  "flst": {
+   "241762": [
+    "female",
+    "male"
+   ],
+   "238196": [
+    "female"
+   ],
+   "235754": [
+    "female",
+    "male"
+   ],
+   "222754": [
+    "male"
+   ],
+   "218559": [
+    "male"
+   ],
+   "216673": [
+    "female",
+    "male"
+   ],
+   "211892": [
+    "female",
+    "male"
+   ],
+   "179303": [
+    "male"
+   ],
+   "178753": [
+    "female",
+    "male"
+   ],
+   "164418": [
+    "male"
+   ],
+   "163286": [
+    "male"
+   ],
+   "156204": [
+    "female",
+    "male"
+   ],
+   "150698": [
+    "female",
+    "male"
+   ],
+   "147469": [
+    "female"
+   ],
+   "147468": [
+    "male"
+   ],
+   "105551": [
+    "male"
+   ]
+  }
+ }
+}

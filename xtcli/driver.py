@@ -24,6 +24,7 @@ from .fakeapi import ServerState
 
 MAIN_FORM_CLASS = "TForm1"
 DIALOG_CLASS = "TForm24"
+CONFIRM_DIALOG_CLASS = "TFormDialog"  # xTranslator's modal Yes/No/Cancel prompt
 WIZARDS_MENU = "wizards"
 RUN_BUTTON = "Run Processor"
 MIN_VERSION = (1, 4, 16)  # first release with the BatchProcessor
@@ -55,6 +56,29 @@ def _close_stray_dialogs(app, log) -> None:
                 w.close()
         except Exception:
             pass
+
+
+def _answer_confirm_dialog(app, log) -> None:
+    """Click &Yes on xTranslator's blocking Yes/No/Cancel prompt (TFormDialog).
+
+    loadfile can raise modal confirmations that the prefs pre-answers don't
+    cover (observed 2026-07-12 with some older form-version LE-style
+    plugins). The batch sits at
+    0 API requests until the prompt is answered; Yes means "keep loading",
+    which is always what a headless batch wants. The BatchProcessor dialog
+    itself is TForm24 and is never touched here.
+    """
+    try:
+        for w in app.windows(visible_only=True):
+            if w.class_name() != CONFIRM_DIALOG_CLASS:
+                continue
+            for c in w.descendants(class_name="TButton"):
+                if c.window_text() == "&Yes":
+                    log(f"auto-answering modal prompt {w.window_text()!r} with Yes")
+                    c.click()
+                    return
+    except Exception:
+        pass
 
 
 def _open_batchprocessor(app, hwnd: int, log) -> object:
@@ -93,7 +117,17 @@ def run_batch(cfg, state: ServerState, verbose: bool = False) -> dict:
             print(f"[driver] {msg}")
 
     t0 = time.monotonic()
-    proc = subprocess.Popen([str(cfg.exe), f"-{cfg.game}"], cwd=str(cfg.install_dir))
+    # SW_SHOWMINNOACTIVE (7): starts minimized without stealing foreground
+    # focus. Safe because all automation below uses window messages
+    # (WM_COMMAND / BM_CLICK), not real mouse/keyboard input - see module
+    # docstring. A minimized window still has WS_VISIBLE set, so pywinauto's
+    # visibility checks (main.wait("ready")) keep working.
+    startupinfo = subprocess.STARTUPINFO()
+    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    startupinfo.wShowWindow = 7  # SW_SHOWMINNOACTIVE
+    proc = subprocess.Popen(
+        [str(cfg.exe), f"-{cfg.game}"], cwd=str(cfg.install_dir), startupinfo=startupinfo
+    )
     app = None
     try:
         app = Application(backend="win32").connect(process=proc.pid, timeout=cfg.launch_timeout)
@@ -114,6 +148,7 @@ def run_batch(cfg, state: ServerState, verbose: bool = False) -> dict:
             if state.done.wait(timeout=1.0):
                 log("sentinel received - batch finished")
                 break
+            _answer_confirm_dialog(app, log)
             if proc.poll() is not None:
                 raise DriverError("xTranslator exited before the batch finished")
             now = time.monotonic()

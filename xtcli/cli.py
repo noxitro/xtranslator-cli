@@ -17,7 +17,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from . import __version__, batchgen, prefs
+from . import __version__, batchgen, espmeta, prefs
 from .config import Config, GAMES, load_config, save_config
 from .fakeapi import FakeApiServer
 
@@ -25,7 +25,15 @@ AGENT_INSTRUCTIONS = (
     "Fill in every empty 'trans' with the translation of 'orig'. Keep placeholder "
     "tokens exactly as they are: '<a_A>' (alias), standalone numbers like '999', "
     "'<Alias=...>' tags, '%s'-style format codes and any <...> markup. Keep the "
-    "same number of line breaks. Leave 'orig' untouched."
+    "same number of line breaks. Leave 'orig' untouched. Entries may carry "
+    "read-only context fields taken from the plugin's records - do not edit or "
+    "remove them: 'kind' is what the string is (npc_line = a line SPOKEN BY an "
+    "NPC, player_line = a line spoken by the player character, book / name / "
+    "system / other), 'speaker' (on npc_line) is the speaking NPC's gender "
+    "(female / male / mixed / unknown), 'edid' is the editor ID of the source "
+    "record. Choose the target-language speech register accordingly - e.g. a "
+    "speaker=female line must read as a woman speaking, never with masculine "
+    "phrasing."
 )
 
 PLUGIN_EXTS = {".esp", ".esm", ".esl"}
@@ -72,6 +80,26 @@ def _run_batch(cfg: Config, script: str, server: FakeApiServer, verbose: bool) -
     return report
 
 
+def _meta_lookup(cfg: Config, files: list[Path]):
+    """Kind/speaker context for plugin strings (espmeta); never fails extract."""
+    plugins = [f for f in files if f.suffix.lower() in PLUGIN_EXTS]
+    if not plugins:
+        return lambda s: None
+    data_dir = prefs.get_value(cfg.game_prefs_ini, "Game_CacheDataFolder")
+    cache_dir = cfg.path.parent / ".espmeta-cache" if cfg.path else None
+    try:
+        meta = espmeta.collect_meta(plugins, data_dir=data_dir, cache_dir=cache_dir)
+    except Exception as e:  # context is best-effort, extraction must not fail
+        print(f"warning: dialogue metadata skipped: {e}", file=sys.stderr)
+        return lambda s: None
+    npc = [m for m in meta.values() if m.get("kind") == "npc_line"]
+    gendered = [m for m in npc if m.get("speaker") in ("female", "male", "mixed")]
+    if npc:
+        print(f"dialogue metadata: {len(npc)} npc line(s), "
+              f"{len(gendered)} with speaker gender")
+    return espmeta.build_lookup(meta)
+
+
 # --------------------------------------------------------------------------- commands
 
 def cmd_setup(args) -> int:
@@ -113,7 +141,14 @@ def cmd_extract(args) -> int:
         server = FakeApiServer(cfg.port, "capture")
         report = _run_batch(cfg, script, server, args.verbose)
 
-        strings = [{"orig": s, "trans": ""} for s in server.state.captured]
+        lookup = _meta_lookup(cfg, files)
+        strings = []
+        for s in server.state.captured:
+            entry = {"orig": s, "trans": ""}
+            meta = lookup(s)
+            if meta:
+                entry.update(meta)
+            strings.append(entry)
         out = Path(args.output) if args.output else (
             files[0].with_suffix(files[0].suffix + ".strings.json") if len(files) == 1
             else Path("strings.json")
